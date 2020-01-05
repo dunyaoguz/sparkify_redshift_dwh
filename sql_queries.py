@@ -1,3 +1,12 @@
+from dotenv import load_dotenv, find_dotenv
+import os
+
+load_dotenv()
+
+ARN = os.environ['ARN']
+LOG_DATA = os.environ['LOG_DATA']
+SONG_DATA = os.environ['SONG_DATA']
+
 # DROP TABLES
 
 staging_events_table_drop = "DROP TABLE IF EXISTS staging_events"
@@ -85,11 +94,17 @@ time_table_create = ("""CREATE TABLE IF NOT EXISTS time (start_time TIMESTAMP PR
 
 # STAGING TABLES
 
-staging_events_copy = ("""
-""").format()
+staging_events_copy = ("""COPY staging_events FROM '{}'
+                          CREDENTIALS 'aws_iam_role={}'
+                          DELIMITER ','
+                          REGION 'us-west-2'
+""").format(LOG_DATA, ARN)
 
-staging_songs_copy = ("""
-""").format()
+staging_songs_copy = ("""COPY staging_songs FROM '{}'
+                         CREDENTIALS 'aws_iam_role={}'
+                         DELIMITER ','
+                         REGION 'us-west-2'
+""").format(SONG_DATA, ARN)
 
 # FINAL TABLES
 

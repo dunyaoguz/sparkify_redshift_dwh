@@ -77,9 +77,9 @@ def check_connection(ENDPOINT, PORT):
         cur.execute("CREATE TABLE test (test_id INTEGER)")
         cur.execute("SELECT * FROM test")
         conn.close()
-        print('Connection to cluster successful.')
+        print('connection to cluster successful')
     except Exception as e:
-        print('Something went wrong.')
+        print('something went wrong')
 
 # step 6: delete cluster when you're no longer working with it to avoid additional costs
 def reset():
@@ -91,7 +91,7 @@ def main():
     # create_role()
     ROLE_ARN = iam.get_role(RoleName='dwh_project_s3_access')['Role']['Arn']
 
-    create_cluster(ROLE_ARN)
+    # create_cluster(ROLE_ARN)
     # wait until the cluster is created before proceeding
     check_status('available')
 
@@ -100,7 +100,8 @@ def main():
     PORT = redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['Endpoint']['Port']
 
     check_connection(ENDPOINT, PORT)
+    reset()
+    check_status('deleted')
 
 if __name__ == "__main__":
     main()
-    # reset()

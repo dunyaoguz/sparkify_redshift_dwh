@@ -26,7 +26,7 @@ def main():
     cur = conn.cursor()
 
     load_staging_tables(cur, conn)
-    insert_tables(cur, conn)
+    # insert_tables(cur, conn)
 
     conn.close()
 
