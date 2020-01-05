@@ -6,7 +6,6 @@ import os
 
 # step 1: create a new IAM user with admin access, add the key and secret access key to the .env file. Rest of the infrastructure work will be done programatically
 # step 2: create s3, iam, redshift clients
-
 load_dotenv()
 
 KEY = os.environ['AWS_KEY']
@@ -31,7 +30,6 @@ redshift = boto3.client('redshift',
                         )
 
 # step 3: create a role that enables redshift to have s3 read access
-
 iam.create_role(RoleName='dwh_project_s3_access', AssumeRolePolicyDocument=json.dumps({'Statement': [{'Action': 'sts:AssumeRole',
                                                                                                       'Effect': 'Allow',
                                                                                                       'Principal': {'Service': 'redshift.amazonaws.com'}}],
@@ -39,6 +37,23 @@ iam.create_role(RoleName='dwh_project_s3_access', AssumeRolePolicyDocument=json.
 
 # attach s3 read access policy to dwh_project_s3_access
 iam.attach_role_policy(RoleName='dwh_project_s3_access', PolicyArn="arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess")
-role_arn = iam.get_role(RoleName='dwh_project_s3_access')['Role']['Arn']
+ROLE_ARN = iam.get_role(RoleName='dwh_project_s3_access')['Role']['Arn']
 
-# step 4: 
+# step 4: create a redshift cluster
+DB_USER = os.environ['DB_USER']
+DB_PASSWORD = os.environ['DB_PASSWORD']
+
+redshift.create_cluster(ClusterType='multi-node',
+                        NodeType='dc2.large',
+                        NumberOfNodes=4,
+                        #Identifiers & Credentials
+                        DBName='my_dwh',
+                        ClusterIdentifier='redshift-cluster-1',
+                        MasterUsername=DB_USER,
+                        MasterUserPassword=DB_PASSWORD,
+                        #Roles (for s3 access)
+                        IamRoles=[ROLE_ARN]
+)
+
+# wait until cluster status is available, should take 5-10 min. max
+print(redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['ClusterStatus'])
