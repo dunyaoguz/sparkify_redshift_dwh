@@ -20,7 +20,7 @@ staging_songs_table_create = ("""CREATE TABLE IF NOT EXISTS staging_songs (song_
                                                                            duration INTEGER)
 """)
 
-songplay_table_create = ("""CREATE TABLE IF NOT EXISTS songplays (songplay_id SERIAL PRIMARY KEY,
+songplay_table_create = ("""CREATE TABLE IF NOT EXISTS songplays (songplay_id INTEGER IDENTITY(1, 1) PRIMARY KEY,
                                                                   start_time TIMESTAMP NOT NULL,
                                                                   user_id INTEGER NOT NULL,
                                                                   level VARCHAR NOT NULL,

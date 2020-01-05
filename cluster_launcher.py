@@ -45,7 +45,7 @@ def create_role():
 
 # step 4: create a redshift cluster
 def create_cluster(ROLE_ARN):
-    ''' Creates a redshift cluster with 4 dc2.large type nodes'''
+    ''' Creates a redshift cluster with 4 dc2.large type nodes and the IAM role specified '''
     redshift.create_cluster(ClusterType='multi-node',
                             NodeType='dc2.large',
                             NumberOfNodes=4,
@@ -83,6 +83,7 @@ def check_connection(ENDPOINT, PORT):
 
 # step 6: delete cluster when you're no longer working with it to avoid additional costs
 def reset():
+    ''' Deletes redshift cluster '''
     redshift.delete_cluster(ClusterIdentifier='redshift-cluster-1',
                             SkipFinalClusterSnapshot=True)
 
@@ -91,7 +92,7 @@ def main():
     ROLE_ARN = iam.get_role(RoleName='dwh_project_s3_access')['Role']['Arn']
 
     create_cluster(ROLE_ARN)
-    # wait until the cluster is created before proceeding further
+    # wait until the cluster is created before proceeding
     check_status('available')
 
     # make note of the cluster endpoint and port
