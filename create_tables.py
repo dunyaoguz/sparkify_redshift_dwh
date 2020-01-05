@@ -21,7 +21,7 @@ def create_tables(cur, conn):
         conn.commit()
 
 def main():
-    conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(HOST, 'my_dwh', DB_USER, DB_PASSWORD, DB_PORT)
+    conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(HOST, 'my_dwh', DB_USER, DB_PASSWORD, DB_PORT))
     cur = conn.cursor()
 
     drop_tables(cur, conn)

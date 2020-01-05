@@ -10,18 +10,40 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 
 # CREATE TABLES
 
-staging_events_table_create = ("""CREATE TABLE IF NOT EXISTS staging_events
+staging_events_table_create = ("""CREATE TABLE IF NOT EXISTS staging_events (artist VARCHAR,
+                                                                             auth VARCHAR,
+                                                                             firstName VARCHAR,
+                                                                             gender VARCHAR,
+                                                                             itemInSession INTEGER,
+                                                                             lastName VARCHAR,
+                                                                             length FLOAT,
+                                                                             level VARCHAR,
+                                                                             location VARCHAR,
+                                                                             method VARCHAR,
+                                                                             page VARCHAR,
+                                                                             registration BIGINT,
+                                                                             sessionId INTEGER,
+                                                                             song VARCHAR,
+                                                                             status INTEGER,
+                                                                             ts BIGINT,
+                                                                             userAgent VARCHAR,
+                                                                             userId INTEGER)
 """)
 
-staging_songs_table_create = ("""CREATE TABLE IF NOT EXISTS staging_songs (song_id VARCHAR PRIMARY KEY,
+staging_songs_table_create = ("""CREATE TABLE IF NOT EXISTS staging_songs (song_id VARCHAR,
+                                                                           num_songs INTEGER,
                                                                            title VARCHAR,
-                                                                           artist_id VARCHAR NOT NULL,
+                                                                           artist_name VARCHAR,
+                                                                           artist_latitude FLOAT,
                                                                            year INTEGER,
-                                                                           duration INTEGER)
+                                                                           duration FLOAT,
+                                                                           artist_id VARCHAR NOT NULL,
+                                                                           artist_longitude FLOAT,
+                                                                           artist_location VARCHAR)
 """)
 
 songplay_table_create = ("""CREATE TABLE IF NOT EXISTS songplays (songplay_id INTEGER IDENTITY(1, 1) PRIMARY KEY,
-                                                                  start_time TIMESTAMP NOT NULL,
+                                                                  start_time TIMESTAMP NOT NULL SORTKEY,
                                                                   user_id INTEGER NOT NULL,
                                                                   level VARCHAR NOT NULL,
                                                                   song_id VARCHAR,
@@ -42,14 +64,14 @@ song_table_create = ("""CREATE TABLE IF NOT EXISTS songs (song_id VARCHAR PRIMAR
                                                           title VARCHAR,
                                                           artist_id VARCHAR NOT NULL,
                                                           year INTEGER,
-                                                          duration INTEGER)
+                                                          duration FLOAT)
 """)
 
 artist_table_create = ("""CREATE TABLE IF NOT EXISTS artists (artist_id VARCHAR PRIMARY KEY,
                                                               name VARCHAR,
                                                               location VARCHAR,
-                                                              latitude INTEGER,
-                                                              longitude INTEGER)
+                                                              latitude FLOAT,
+                                                              longitude FLOAT)
 """)
 
 time_table_create = ("""CREATE TABLE IF NOT EXISTS time (start_time TIMESTAMP PRIMARY KEY,
