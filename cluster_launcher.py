@@ -49,12 +49,12 @@ def create_cluster(ROLE_ARN):
     redshift.create_cluster(ClusterType='multi-node',
                             NodeType='dc2.large',
                             NumberOfNodes=4,
-                            #Identifiers & Credentials
+                            # Identifiers & Credentials
                             DBName='my_dwh',
                             ClusterIdentifier='redshift-cluster-1',
                             MasterUsername=DB_USER,
                             MasterUserPassword=DB_PASSWORD,
-                            #Roles (for s3 access)
+                            # Roles
                             IamRoles=[ROLE_ARN]
     )
 

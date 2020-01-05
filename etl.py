@@ -21,7 +21,6 @@ def insert_tables(cur, conn):
         cur.execute(query)
         conn.commit()
 
-
 def main():
     conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(HOST, 'my_dwh', DB_USER, DB_PASSWORD, DB_PORT))
     cur = conn.cursor()
