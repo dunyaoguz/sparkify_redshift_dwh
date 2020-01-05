@@ -69,7 +69,7 @@ def check_status(status):
         print('cluster is deleted')
 
 # step 5: check whether you can connect to the cluster to confirm the set up was successful
-def check_connection():
+def check_connection(ENDPOINT, PORT):
     ''' Checks if a connection can be made to the cluster that was created '''
     try:
         conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(ENDPOINT, 'my_dwh', DB_USER, DB_PASSWORD, PORT))
@@ -98,7 +98,7 @@ def main():
     ENDPOINT = redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['Endpoint']['Address']
     PORT = redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['Endpoint']['Port']
 
-    check_connection()
+    check_connection(ENDPOINT, PORT)
 
 if __name__ == "__main__":
     main()
