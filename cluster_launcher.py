@@ -4,9 +4,10 @@ import json
 from dotenv import load_dotenv, find_dotenv
 import os
 
-load_dotenv()
-
 # step 1: create a new IAM user with admin access, add the key and secret access key to the config file
+# step 2: create s3, iam, redshift clients
+
+load_dotenv()
 KEY = os.environ['AWS_KEY']
 SECRET = os.environ['AWS_SECRET']
 
