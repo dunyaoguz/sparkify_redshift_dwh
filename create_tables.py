@@ -3,6 +3,8 @@ import os
 import psycopg2
 from sql_queries import create_table_queries, drop_table_queries
 
+load_dotenv()
+
 HOST = os.environ['HOST']
 DB_NAME = os.environ['DB_NAME']
 DB_USER = os.environ['DB_USER']
