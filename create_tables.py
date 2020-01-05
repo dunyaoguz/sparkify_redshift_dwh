@@ -6,7 +6,6 @@ from sql_queries import create_table_queries, drop_table_queries
 load_dotenv()
 
 HOST = os.environ['HOST']
-DB_NAME = os.environ['DB_NAME']
 DB_USER = os.environ['DB_USER']
 DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_PORT = os.environ['DB_PORT']
@@ -25,7 +24,7 @@ def main():
     config = configparser.ConfigParser()
     config.read('dwh.cfg')
 
-    conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(HOST, DB_NAME, DB_USER, DB_PASSWORD, DB_PORT)
+    conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(HOST, 'my_dwh', DB_USER, DB_PASSWORD, DB_PORT)
     cur = conn.cursor()
 
     drop_tables(cur, conn)

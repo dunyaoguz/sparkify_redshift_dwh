@@ -3,6 +3,7 @@ import boto3
 import json
 from dotenv import load_dotenv, find_dotenv
 import os
+import psycopg2
 
 # step 1: create a new IAM user with admin access, add the key and secret access key to the .env file. Rest of the infrastructure work will be done programatically
 # step 2: create s3, iam, redshift clients
@@ -56,4 +57,16 @@ redshift.create_cluster(ClusterType='multi-node',
 )
 
 # wait until cluster status is available, should take 5-10 min. max
-print(redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['ClusterStatus'])
+cluster_properties = redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]
+print(cluster_properties['ClusterStatus'])
+
+# make note of the cluster endpoint
+ENDPOINT = cluster_properties['Endpoint']['Address']
+PORT = cluster_properties['Endpoint']['Port']
+
+# step 5: test whether you can connect to the cluster
+conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(ENDPOINT, 'my_dwh', DB_USER, DB_PASSWORD, PORT))
+cur = conn.cursor()
+cur.execute("CREATE TABLE test (test_id INTEGER)")
+cur.execute("SELECT * FROM test")
+conn.close()
