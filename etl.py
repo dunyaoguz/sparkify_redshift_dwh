@@ -13,12 +13,14 @@ DB_PORT = os.environ['DB_PORT']
 def load_staging_tables(cur, conn):
     for query in copy_table_queries:
         cur.execute(query)
+        print(f'Executed {query}')
         conn.commit()
 
 
 def insert_tables(cur, conn):
     for query in insert_table_queries:
         cur.execute(query)
+        print(f'Executed {query}')
         conn.commit()
 
 def main():

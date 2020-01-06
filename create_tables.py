@@ -13,11 +13,13 @@ DB_PORT = os.environ['DB_PORT']
 def drop_tables(cur, conn):
     for query in drop_table_queries:
         cur.execute(query)
+        print(f'Executed {query}')
         conn.commit()
 
 def create_tables(cur, conn):
     for query in create_table_queries:
         cur.execute(query)
+        print(f'Executed {query}')
         conn.commit()
 
 def main():
