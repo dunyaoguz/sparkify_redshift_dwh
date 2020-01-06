@@ -24,22 +24,22 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 staging_events_table_create = ("""CREATE TABLE IF NOT EXISTS staging_events (
                                                             artist              VARCHAR,
                                                             auth                VARCHAR,
-                                                            firstName           VARCHAR,
+                                                            first_name          VARCHAR,
                                                             gender              VARCHAR,
-                                                            itemInSession       VARCHAR,
-                                                            lastName            VARCHAR,
+                                                            item_in_session     VARCHAR,
+                                                            last_name           VARCHAR,
                                                             length              VARCHAR,
                                                             level               VARCHAR,
                                                             location            VARCHAR,
                                                             method              VARCHAR,
                                                             page                VARCHAR,
                                                             registration        VARCHAR,
-                                                            sessionId           VARCHAR,
+                                                            session_id          VARCHAR,
                                                             song                VARCHAR,
                                                             status              VARCHAR,
                                                             ts                  VARCHAR,
-                                                            userAgent           VARCHAR,
-                                                            userId              VARCHAR
+                                                            user_agent          VARCHAR,
+                                                            user_id             VARCHAR
                                                             )
 """)
 
@@ -110,33 +110,64 @@ time_table_create = ("""CREATE TABLE IF NOT EXISTS time (
 
 # STAGING TABLES
 
-staging_events_copy = ("""copy staging_events from '{}'
-                          credentials 'aws_iam_role={}'
-                          region 'us-west-2'
-                          format as json '{}'
+staging_events_copy = ("""COPY staging_events FROM '{}'
+                          CREDENTIALS 'aws_iam_role={}'
+                          REGION 'us-west-2'
+                          FORMAT AS json '{}'
 """).format(LOG_DATA, ARN, LOG_JSON_PATH)
 
-staging_songs_copy = ("""copy staging_songs from '{}'
-                         credentials 'aws_iam_role={}'
-                         compupdate off region 'us-west-2'
-                         json 'auto' truncatecolumns
+staging_songs_copy = ("""COPY staging_songs FROM '{}'
+                         CREDENTIALS 'aws_iam_role={}'
+                         COMPUPDATE OFF REGION 'us-west-2'
+                         JSON 'auto' TRUNCATECOLUMNS
 """).format(SONG_DATA, ARN)
 
 # FINAL TABLES
 
-songplay_table_insert = ("""
+songplay_table_insert = ("""INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
+SELECT e.ts
+, e.user_id
+, e.level
+, s.song_id
+, s.artist_id
+, e.session_id
+, e.location
+, e.user_agent
+FROM staging_events AS e
+JOIN staging_songs AS s
+ON e.song = s.title
+AND e.artist = s.artist_name
+WHERE e.page = 'Next Song'
 """)
 
-user_table_insert = ("""
+user_table_insert = ("""INSERT INTO users (user_id, first_name, last_name, gender, level)
+SELECT DISTINCT user_id
+, first_name
+, last_name
+, gender
+, level
+FROM staging_events
 """)
 
-song_table_insert = ("""
+song_table_insert = ("""INSERT INTO songs (artist_id, song_id, title, duration, year)
+SELECT DISTINCT artist_id
+, song_id
+, title
+, duration
+, year
+FROM staging_songs
 """)
 
-artist_table_insert = ("""
+artist_table_insert = ("""INSERT INTO artists (artist_id, latitude, longitude, location, name)
+SELECT DISTINCT artist_id
+, artist_latitude
+, artist_longitude
+, artist_location
+, artist_name
+FROM staging_songs
 """)
 
-time_table_insert = ("""
+time_table_insert = ("""INSERT INTO time (start_time, hour, day, week, month, year)
 """)
 
 # QUERY LISTS
