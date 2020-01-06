@@ -26,34 +26,34 @@ staging_events_table_create = ("""CREATE TABLE IF NOT EXISTS staging_events (
                                                             auth                VARCHAR,
                                                             firstName           VARCHAR,
                                                             gender              VARCHAR,
-                                                            itemInSession       INTEGER,
+                                                            itemInSession       VARCHAR,
                                                             lastName            VARCHAR,
-                                                            length              FLOAT,
+                                                            length              VARCHAR,
                                                             level               VARCHAR,
                                                             location            VARCHAR,
                                                             method              VARCHAR,
                                                             page                VARCHAR,
-                                                            registration        BIGINT,
-                                                            sessionId           INTEGER     NOT NULL,
+                                                            registration        VARCHAR,
+                                                            sessionId           VARCHAR,
                                                             song                VARCHAR,
-                                                            status              INTEGER,
-                                                            ts                  BIGINT      NOT NULL,
+                                                            status              VARCHAR,
+                                                            ts                  VARCHAR,
                                                             userAgent           VARCHAR,
-                                                            userId              INTEGER
+                                                            userId              VARCHAR
                                                             )
 """)
 
 staging_songs_table_create = ("""CREATE TABLE IF NOT EXISTS staging_songs (
-                                                            song_id             VARCHAR     NOT NULL,
-                                                            num_songs           INTEGER,
-                                                            title               TEXT,
-                                                            artist_name         TEXT,
-                                                            artist_latitude     FLOAT,
-                                                            year                INTEGER,
-                                                            duration            FLOAT,
-                                                            artist_id           VARCHAR     NOT NULL,
-                                                            artist_longitude    FLOAT,
-                                                            artist_location     TEXT
+                                                            song_id             VARCHAR,
+                                                            num_songs           VARCHAR,
+                                                            title               VARCHAR,
+                                                            artist_name         VARCHAR,
+                                                            artist_latitude     VARCHAR,
+                                                            year                VARCHAR,
+                                                            duration            VARCHAR,
+                                                            artist_id           VARCHAR,
+                                                            artist_longitude    VARCHAR,
+                                                            artist_location     VARCHAR
                                                             )
 """)
 
@@ -110,16 +110,16 @@ time_table_create = ("""CREATE TABLE IF NOT EXISTS time (
 
 # STAGING TABLES
 
-staging_events_copy = ("""COPY staging_events FROM '{}'
-                          CREDENTIALS 'aws_iam_role={}'
-                          FORMAT AS json '{}'
-                          REGION 'us-west-2'
+staging_events_copy = ("""copy staging_events from '{}'
+                          credentials 'aws_iam_role={}'
+                          region 'us-west-2'
+                          format as json '{}'
 """).format(LOG_DATA, ARN, LOG_JSON_PATH)
 
-staging_songs_copy = ("""COPY staging_songs FROM '{}'
-                         CREDENTIALS 'aws_iam_role={}'
-                         FORMAT AS json 'auto'
-                         REGION 'us-west-2'
+staging_songs_copy = ("""copy staging_songs from '{}'
+                         credentials 'aws_iam_role={}'
+                         compupdate off region 'us-west-2'
+                         json 'auto' truncatecolumns
 """).format(SONG_DATA, ARN)
 
 # FINAL TABLES

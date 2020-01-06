@@ -91,7 +91,7 @@ def main():
     # create_role()
     ROLE_ARN = iam.get_role(RoleName='dwh_project_s3_access')['Role']['Arn']
 
-    create_cluster(ROLE_ARN)
+    # create_cluster(ROLE_ARN)
     # wait until the cluster is created before proceeding
     check_status('available')
 
@@ -101,8 +101,8 @@ def main():
 
     check_connection(ENDPOINT, PORT)
 
-    # reset()
-    # check_status('deleted')
+    reset()
+    check_status('deleted')
 
 if __name__ == "__main__":
     main()
