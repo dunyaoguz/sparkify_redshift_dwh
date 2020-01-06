@@ -44,7 +44,7 @@ staging_events_table_create = ("""CREATE TABLE IF NOT EXISTS staging_events (
 """)
 
 staging_songs_table_create = ("""CREATE TABLE IF NOT EXISTS staging_songs (
-                                                            song_id             VARCHAR,
+                                                            song_id             VARCHAR     NOT NULL,
                                                             num_songs           INTEGER,
                                                             title               VARCHAR,
                                                             artist_name         VARCHAR,
@@ -118,7 +118,7 @@ staging_events_copy = ("""COPY staging_events FROM '{}'
 
 staging_songs_copy = ("""COPY staging_songs FROM '{}'
                          CREDENTIALS 'aws_iam_role={}'
-                         FORMAT AS json 'AUTO'
+                         FORMAT AS json 'auto'
                          REGION 'us-west-2'
 """).format(SONG_DATA, ARN)
 
