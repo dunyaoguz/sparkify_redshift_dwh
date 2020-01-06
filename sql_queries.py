@@ -34,12 +34,12 @@ staging_events_table_create = ("""CREATE TABLE IF NOT EXISTS staging_events (
                                                             method              VARCHAR,
                                                             page                VARCHAR,
                                                             registration        VARCHAR,
-                                                            session_id          VARCHAR,
+                                                            session_id          INTEGER,
                                                             song                VARCHAR,
                                                             status              VARCHAR,
-                                                            ts                  VARCHAR,
+                                                            ts                  BIGINT,
                                                             user_agent          VARCHAR,
-                                                            user_id             VARCHAR
+                                                            user_id             INTEGER
                                                             )
 """)
 
@@ -48,11 +48,11 @@ staging_songs_table_create = ("""CREATE TABLE IF NOT EXISTS staging_songs (
                                                             num_songs           VARCHAR,
                                                             title               VARCHAR,
                                                             artist_name         VARCHAR,
-                                                            artist_latitude     VARCHAR,
-                                                            year                VARCHAR,
-                                                            duration            VARCHAR,
+                                                            artist_latitude     FLOAT,
+                                                            year                INTEGER,
+                                                            duration            FLOAT,
                                                             artist_id           VARCHAR,
-                                                            artist_longitude    VARCHAR,
+                                                            artist_longitude    FLOAT,
                                                             artist_location     VARCHAR
                                                             )
 """)
@@ -60,7 +60,7 @@ staging_songs_table_create = ("""CREATE TABLE IF NOT EXISTS staging_songs (
 songplay_table_create = ("""CREATE TABLE IF NOT EXISTS songplays (
                                                             songplay_id         INTEGER     IDENTITY(1, 1)  PRIMARY KEY,
                                                             start_time          TIMESTAMP   NOT NULL    SORTKEY,
-                                                            user_id             INTEGER     NOT NULL,
+                                                            user_id             INTEGER,
                                                             level               VARCHAR     NOT NULL,
                                                             song_id             VARCHAR,
                                                             artist_id           VARCHAR,
@@ -125,49 +125,63 @@ staging_songs_copy = ("""COPY staging_songs FROM '{}'
 # FINAL TABLES
 
 songplay_table_insert = ("""INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
-SELECT e.ts
-, e.user_id
-, e.level
-, s.song_id
-, s.artist_id
-, e.session_id
-, e.location
-, e.user_agent
+SELECT
+    TIMESTAMP 'epoch' + e.ts/1000 * INTERVAL '1 second'
+    , e.user_id
+    , e.level
+    , s.song_id
+    , s.artist_id
+    , e.session_id
+    , e.location
+    , e.user_agent
 FROM staging_events AS e
 JOIN staging_songs AS s
-ON e.song = s.title
-AND e.artist = s.artist_name
+    ON e.song = s.title
+    AND e.artist = s.artist_name
 WHERE e.page = 'Next Song'
 """)
 
 user_table_insert = ("""INSERT INTO users (user_id, first_name, last_name, gender, level)
-SELECT DISTINCT user_id
-, first_name
-, last_name
-, gender
-, level
+SELECT
+    DISTINCT user_id
+    , first_name
+    , last_name
+    , gender
+    , level
 FROM staging_events
+WHERE page = 'Next Song'
 """)
 
 song_table_insert = ("""INSERT INTO songs (artist_id, song_id, title, duration, year)
-SELECT DISTINCT artist_id
-, song_id
-, title
-, duration
-, year
+SELECT
+    DISTINCT artist_id
+    , song_id
+    , title
+    , duration
+    , year
 FROM staging_songs
 """)
 
 artist_table_insert = ("""INSERT INTO artists (artist_id, latitude, longitude, location, name)
-SELECT DISTINCT artist_id
-, artist_latitude
-, artist_longitude
-, artist_location
-, artist_name
+SELECT
+    DISTINCT artist_id
+    , artist_latitude
+    , artist_longitude
+    , artist_location
+    , artist_name
 FROM staging_songs
 """)
 
-time_table_insert = ("""INSERT INTO time (start_time, hour, day, week, month, year)
+time_table_insert = ("""INSERT INTO time (start_time, hour, day, week, month, year, weekday)
+SELECT
+    TIMESTAMP 'epoch' + CAST(e.ts AS INTEGER)/1000 * INTERVAL '1 second' AS start_time
+    , EXTRACT(hour FROM start_time)
+    , EXTRACT(day FROM start_time)
+    , EXTRACT(week FROM start_time)
+    , EXTRACT(month FROM start_time)
+    , EXTRACT(year FROM start_time)
+    , EXTRACT(week FROM start_time)
+FROM staging_events
 """)
 
 # QUERY LISTS
