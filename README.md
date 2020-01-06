@@ -9,3 +9,9 @@
 ## Example Queries
 
 ## Tech Stack
+* boto3
+* dotenv
+* os
+* pandas
+* psycopg2
+* json
