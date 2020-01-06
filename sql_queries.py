@@ -174,7 +174,7 @@ FROM staging_songs
 
 time_table_insert = ("""INSERT INTO time (start_time, hour, day, week, month, year, weekday)
 SELECT DISTINCT
-    TIMESTAMP 'epoch' + CAST(ts AS INTEGER)/1000 * INTERVAL '1 second' AS start_time
+    TIMESTAMP 'epoch' + ts/1000 * INTERVAL '1 second' AS start_time
     , EXTRACT(hour FROM start_time)
     , EXTRACT(day FROM start_time)
     , EXTRACT(week FROM start_time)
