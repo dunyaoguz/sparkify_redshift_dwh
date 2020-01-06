@@ -1,2 +1,11 @@
 # sparkify_redshift_dwh
-🌤 Create a data warehouse hosted on Redshift
+
+## Summary
+
+## Directory
+
+## Quick Start
+
+## Example Queries
+
+## Tech Stack
