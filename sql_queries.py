@@ -1,11 +1,13 @@
 from dotenv import load_dotenv, find_dotenv
 import os
+import pandas as pd
 
 load_dotenv()
 
 ARN = os.environ['ARN']
 LOG_DATA = os.environ['LOG_DATA']
 SONG_DATA = os.environ['SONG_DATA']
+LOG_JSON_PATH = os.environ['LOG_JSON_PATH']
 
 # DROP TABLES
 
@@ -74,7 +76,7 @@ user_table_create = ("""CREATE TABLE IF NOT EXISTS users (
                                                             last_name           VARCHAR,
                                                             gender              VARCHAR,
                                                             level               VARCHAR
-                                                            )
+                                                            ) diststyle all;
 """)
 
 song_table_create = ("""CREATE TABLE IF NOT EXISTS songs (
@@ -83,7 +85,7 @@ song_table_create = ("""CREATE TABLE IF NOT EXISTS songs (
                                                             artist_id           VARCHAR     NOT NULL,
                                                             year                INTEGER,
                                                             duration            FLOAT
-                                                            )
+                                                            ) diststyle all;
 """)
 
 artist_table_create = ("""CREATE TABLE IF NOT EXISTS artists (
@@ -92,31 +94,31 @@ artist_table_create = ("""CREATE TABLE IF NOT EXISTS artists (
                                                             location            VARCHAR,
                                                             latitude            FLOAT,
                                                             longitude           FLOAT
-                                                            )
+                                                            ) diststyle all;
 """)
 
 time_table_create = ("""CREATE TABLE IF NOT EXISTS time (
                                                             start_time          TIMESTAMP   PRIMARY KEY,
-                                                            hour                INTEGER,
-                                                            day                 INTEGER,
-                                                            week                INTEGER,
-                                                            month               INTEGER,
-                                                            year                INTEGER,
-                                                            weekday             INTEGER
-                                                            )
+                                                            hour                SMALLINT,
+                                                            day                 SMALLINT,
+                                                            week                SMALLINT,
+                                                            month               SMALLINT,
+                                                            year                SMALLINT,
+                                                            weekday             SMALLINT
+                                                            ) diststyle all;
 """)
 
 # STAGING TABLES
 
 staging_events_copy = ("""COPY staging_events FROM '{}'
                           CREDENTIALS 'aws_iam_role={}'
-                          DELIMITER ','
+                          FORMAT AS json '{}'
                           REGION 'us-west-2'
-""").format(LOG_DATA, ARN)
+""").format(LOG_DATA, ARN, LOG_JSON_PATH)
 
 staging_songs_copy = ("""COPY staging_songs FROM '{}'
                          CREDENTIALS 'aws_iam_role={}'
-                         DELIMITER ','
+                         FORMAT AS json 'AUTO'
                          REGION 'us-west-2'
 """).format(SONG_DATA, ARN)
 
