@@ -10,16 +10,18 @@ This is a data engineering project aimed to get practice with AWS Redshift, ETL 
 
 ## Directory
 
-1. `cluster_launcher.py`
-2. `data_check.ipnyb`
-3. `example_data`
-4. `log_path_json.json`
-5. `sql_queries.py`
-6. `create_tables.py`
-7. `etl.py`
-8. `example.env`
+1. `cluster_launcher.py`: Creates & deletes a Redshift cluster with 4 dc2.large type nodes and s3 read-only access.
+2. `data_check.ipnyb`: Checks the data in the s3 buckets where the raw data resides. 
+3. `example_data`: Includes example files from the raw data.
+4. `log_path_json.json`: Specifies the order of the keys in the json files for raw log data.
+5. `sql_queries.py`: Includes the SQL statements needed in creating and inserting data into Sparkifydb. 
+6. `create_tables.py`: Creates the Sparkify STAR schema tables and the staging tables needed for data insertion in Redshift.
+7. `etl.py`: Copies raw data from s3 buckets into staging tables, and inserts them into the Sparkifydb.
+8. `example.env`: This is an example of how your .env file should look like if you want to clone and run this project yourself.
 
 ## Quick Start
+
+
 
 ## Example Queries
 
