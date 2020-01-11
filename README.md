@@ -24,6 +24,7 @@ This is a data engineering project aimed to get practice with AWS Redshift, ETL 
 ## Example Queries
 
 ## Tech Stack
+* AWS 
 * boto3
 * dotenv
 * os
