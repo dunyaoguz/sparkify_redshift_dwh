@@ -100,6 +100,7 @@ def reset():
 def main():
     # create_role()
     ROLE_ARN = iam.get_role(RoleName='dwh_project_s3_access')['Role']['Arn']
+    print(f'arn: {ROLE_ARN}')
 
     create_cluster(ROLE_ARN)
     # wait until the cluster is created before proceeding
@@ -108,6 +109,8 @@ def main():
     # make note of the cluster endpoint and port
     ENDPOINT = redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['Endpoint']['Address']
     PORT = redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['Endpoint']['Port']
+    print(f'host: {ENDPOINT}')
+    print(f'port: {PORT}')
 
     check_connection(ENDPOINT, PORT)
 
