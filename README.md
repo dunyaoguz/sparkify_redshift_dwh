@@ -15,7 +15,7 @@ This is a data engineering project aimed to get practice with AWS Redshift, ETL 
 3. `example_data`: Includes example files from the raw data.
 4. `log_path_json.json`: Specifies the order of the keys in the json files for raw log data.
 5. `sql_queries.py`: Includes the SQL statements needed in creating and inserting data into Sparkifydb. 
-6. `create_tables.py`: Creates the Sparkify STAR schema tables and the staging tables needed for data insertion in Redshift.
+6. `create_tables.py`: Creates the Sparkifydb STAR schema tables and the staging tables needed for data insertion.
 7. `etl.py`: Copies raw data from s3 buckets into staging tables, and inserts them into the Sparkifydb.
 8. `example.env`: This is an example of how your .env file should look like if you want to clone and run this project yourself. This is the file where your API keys and database passwords will reside. 
 
@@ -60,13 +60,11 @@ python etl.py
 
 Congrats! You successfully created SparkifyDB. Now go back and delete your Redshift cluster to avoid unnecessary costs. Remember, you'll be charged 1$ for each hour your cluster is live. 
 
-9. To delete your Redshift cluster, go back to cluster_launcher.py, comment out line 105 (`create_cluster(ROLE_ARN)`) and uncomment lines 118 (`reset()`) and 119 (`check_status('deleted')`). Go back to terminal and run cluster_launcher.py.
+9. To delete your Redshift cluster, go back to cluster_launcher.py, comment out line 105 (`create_cluster(ROLE_ARN)`) and uncomment lines 118 (`reset()`) and 119 (`check_status('deleted')`). Go back to terminal and run cluster_launcher.py. Wait until "cluster is deleted" gets printed out in terminal.
 
 ```
 python cluster_launcher.py
 ```
-
-10. Wait until you see "cluster is deleted" printed out in terminal.
 
 ## Schema
 
