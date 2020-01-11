@@ -11,12 +11,18 @@ DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_PORT = os.environ['DB_PORT']
 
 def load_staging_tables(cur, conn):
+    """
+    Copies the sources specified in the s3 buckets on the staging tables.
+    """
     for query in copy_table_queries:
         cur.execute(query)
         print(f'Executed {query}')
         conn.commit()
 
 def insert_tables(cur, conn):
+    """
+    Inserts data from the staging tables onto the tables in the STAR schema.
+    """
     for query in insert_table_queries:
         cur.execute(query)
         print(f'Executed {query}')

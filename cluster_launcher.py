@@ -33,9 +33,11 @@ redshift = boto3.client('redshift',
                         aws_secret_access_key=SECRET
                         )
 
-# step 3: create a role that enables redshift to have s3 read access
+# step 3: create a role that will enable our redshift cluster to have s3 read access
 def create_role():
-    ''' Creates an IAM role with s3 read access '''
+    """
+    Creates an IAM role with s3 read access.
+    """
     iam.create_role(RoleName='dwh_project_s3_access', AssumeRolePolicyDocument=json.dumps({'Statement': [{'Action': 'sts:AssumeRole',
                                                                                                           'Effect': 'Allow',
                                                                                                           'Principal': {'Service': 'redshift.amazonaws.com'}}],
@@ -45,7 +47,9 @@ def create_role():
 
 # step 4: create a redshift cluster
 def create_cluster(ROLE_ARN):
-    ''' Creates a redshift cluster with 4 dc2.large type nodes and the IAM role specified '''
+    """
+    Creates a Redshift cluster with 4 dc2.large type nodes and the specified IAM role.
+    """
     redshift.create_cluster(ClusterType='multi-node',
                             NodeType='dc2.large',
                             NumberOfNodes=4,
@@ -59,7 +63,9 @@ def create_cluster(ROLE_ARN):
     )
 
 def check_status(status):
-    ''' Checks whether the cluster has the desired status'''
+    """
+    Checks whether the cluster has the desired status.
+    """
     try:
         while redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['ClusterStatus'] != status:
             print('{} cluster'.format(redshift.describe_clusters(ClusterIdentifier='redshift-cluster-1')['Clusters'][0]['ClusterStatus']))
@@ -70,7 +76,9 @@ def check_status(status):
 
 # step 5: check whether you can connect to the cluster to confirm the set up was successful
 def check_connection(ENDPOINT, PORT):
-    ''' Checks if a connection can be made to the cluster that was created '''
+    """
+    Checks if a connection can be made to the Redshift cluster that was created.
+    """
     try:
         conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(ENDPOINT, 'my_dwh', DB_USER, DB_PASSWORD, PORT))
         cur = conn.cursor()
@@ -83,7 +91,9 @@ def check_connection(ENDPOINT, PORT):
 
 # step 6: delete cluster when you're no longer working with it to avoid additional costs
 def reset():
-    ''' Deletes redshift cluster '''
+    """
+    Deletes Redshift cluster.
+    """
     redshift.delete_cluster(ClusterIdentifier='redshift-cluster-1',
                             SkipFinalClusterSnapshot=True)
 
@@ -101,6 +111,7 @@ def main():
 
     check_connection(ENDPOINT, PORT)
 
+    # uncomment the code below when you want to delete the cluster
     # reset()
     # check_status('deleted')
 

@@ -11,12 +11,18 @@ DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_PORT = os.environ['DB_PORT']
 
 def drop_tables(cur, conn):
+    """
+    Drops any existing tables in the specified Redshift database.
+    """
     for query in drop_table_queries:
         cur.execute(query)
         print(f'Executed {query}')
         conn.commit()
 
 def create_tables(cur, conn):
+    """
+    Creates new tables in the specified Redshift database.
+    """
     for query in create_table_queries:
         cur.execute(query)
         print(f'Executed {query}')
