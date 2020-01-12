@@ -77,7 +77,7 @@ Wait until "cluster is deleted" gets printed out in terminal.
 Get the most streamed artists 
 
 ```
-SELECT a.artist_name
+SELECT a.name
 , COUNT(DISTINCT s.songplay_id) AS no_listens
 FROM songplays AS s
 LEFT JOIN artists AS a
