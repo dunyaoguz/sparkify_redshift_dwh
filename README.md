@@ -70,7 +70,7 @@ Wait until "cluster is deleted" gets printed out in terminal.
 
 ## Schema
 
-![sparkifydb](erd.png)
+![sparkifydb](entity_relationship_diagram.png)
 
 ## Example Queries
 
